@@ -98,6 +98,7 @@ if __name__ == '__main__':
 
         cerebro.addsizer(bt.sizers.AllInSizer)
 
+        cerebro.broker.setcommission(commission=0.001)  # Commission
         cerebro.adddata(data)
         # print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
         cerebro.run()
