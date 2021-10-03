@@ -59,7 +59,7 @@ class TestStrategy(bt.Strategy):
     def stop(self):
         msg = f"(MA Fast: {self.params.pfast}) (MA Slow: {self.params.pslow}) Ending Value: {round(self.broker.getvalue(), 1)}"
         self.log(msg, doprint=True)
-        with open(f'.\\results\\result-{self.src}.txt', 'a') as f:
+        with open(f'.\\SMA\\results\\result-{self.src}.txt', 'a') as f:
             f.write(msg+'\n')
 
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     for src in src_list:
         cerebro = bt.Cerebro()
 
-        f = open(f'.\\results\\result-{src[:-4]}.txt', 'w')
+        f = open(f'.\\SMA\\results\\result-{src[:-4]}.txt', 'w')
         f.truncate()
         f.close()
 
