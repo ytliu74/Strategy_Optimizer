@@ -1,0 +1,6 @@
+backtrader
+pandas
+baostock
+matplotlib
+yfinance
+trendln

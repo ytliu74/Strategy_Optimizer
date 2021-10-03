@@ -1,0 +1,13 @@
+(MA Fast: 3) (MA Slow: 20) Ending Value: 6625.1
+(MA Fast: 8) (MA Slow: 20) Ending Value: 6759.4
+(MA Fast: 5) (MA Slow: 20) Ending Value: 6941.3
+(MA Fast: 6) (MA Slow: 20) Ending Value: 8075.7
+(MA Fast: 11) (MA Slow: 20) Ending Value: 8505.0
+(MA Fast: 13) (MA Slow: 20) Ending Value: 6943.2
+
+(MA Fast: 12) (MA Slow: 20) Ending Value: 12972.8
+(MA Fast: 9) (MA Slow: 20) Ending Value: 7224.6
+(MA Fast: 10) (MA Slow: 20) Ending Value: 6975.5
+(MA Fast: 7) (MA Slow: 20) Ending Value: 8571.4
+(MA Fast: 4) (MA Slow: 20) Ending Value: 6593.0
+(MA Fast: 15) (MA Slow: 20) Ending Value: 11086.4
