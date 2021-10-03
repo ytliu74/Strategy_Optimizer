@@ -91,8 +91,8 @@ if __name__ == '__main__':
 
         strats = cerebro.optstrategy(
             TestStrategy,
-            pfast=range(3, 16),
-            pslow=20,
+            pfast=range(4, 19),
+            pslow=range(20, 150),
             src=src
         )
 
