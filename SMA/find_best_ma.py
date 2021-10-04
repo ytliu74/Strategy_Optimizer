@@ -2,8 +2,9 @@ import os
 import re
 import pandas as pd
 
+list_path = os.path.abspath('.\\SMA\\results')
 
-result_list = os.listdir('.\\SMA\\results')
+result_list = os.listdir(list_path)
 
 
 for result in result_list:
@@ -11,15 +12,24 @@ for result in result_list:
     ma_slow = list()
     end_value = list()
 
-    f = open(f".\\SMA\\results\\{result}", 'r')
+    file_path = os.path.join(list_path, result)
+
+    f = open(file_path, 'r')
     for line in f:
         nums = re.findall(r'[1-9]+\.?[0-9]*', line)
         if not nums:
             continue
         else:
-            ma_fast.append(int(nums[0]))
-            ma_slow.append(int(nums[1]))
-            end_value.append(float(nums[2]))
+            fast = int(nums[0])
+            slow = int(nums[1])
+            end = float(nums[2])
+
+            if fast >= slow:    # remove statistics with fast larger then slow
+                continue
+            else:
+                ma_fast.append(fast)
+                ma_slow.append(slow)
+                end_value.append(end)
     f.close()
 
     result_df = pd.DataFrame({

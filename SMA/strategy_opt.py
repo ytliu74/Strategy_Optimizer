@@ -91,14 +91,13 @@ if __name__ == '__main__':
 
         strats = cerebro.optstrategy(
             TestStrategy,
-            pfast=range(4, 19),
-            pslow=range(20, 150),
+            pfast=range(2, 30),
+            pslow=range(5, 120),
             src=src
         )
 
-        cerebro.addsizer(bt.sizers.AllInSizer)
+        cerebro.addsizer(bt.sizers.AllInSizerInt)
 
-        cerebro.broker.setcommission(commission=0.001)  # Commission
         cerebro.adddata(data)
         # print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
         cerebro.run()
