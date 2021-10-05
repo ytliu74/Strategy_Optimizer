@@ -14,6 +14,7 @@ for best_ma in best_list:
 
     df = pd.read_csv(csv_path)
 
+    # select best top 3
     for i in range(3):
         s = df.loc[i]['ma_slow']
         f = df.loc[i]['ma_fast']

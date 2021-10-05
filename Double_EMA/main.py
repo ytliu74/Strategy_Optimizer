@@ -1,5 +1,6 @@
 import os
 import datetime
+import time
 import backtrader as bt
 import backtrader.feeds as btfeeds
 
@@ -12,7 +13,7 @@ class TestStrategy(bt.Strategy):
     }
 
     def log(self, txt, dt=None, doprint=False):
-        if self.params.printlog or doprint:
+        if self.params.printlog and doprint:
             dt = dt or self.datas[0].datetime.date(0)
             print(f"{dt.isoformat()} {txt}")
 
@@ -22,9 +23,9 @@ class TestStrategy(bt.Strategy):
         self.src = src[:-4]
         self.order = None
 
-        sma1 = bt.ind.SMA(period=self.params.pfast)
-        sma2 = bt.ind.SMA(period=self.params.pslow)
-        self.crossover = bt.ind.CrossOver(sma1, sma2)
+        ema1 = bt.ind.EMA(period=self.params.pfast)
+        ema2 = bt.ind.EMA(period=self.params.pslow)
+        self.crossover = bt.ind.CrossOver(ema1, ema2)
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -57,9 +58,9 @@ class TestStrategy(bt.Strategy):
             self.close()
 
     def stop(self):
-        msg = f"(MA Fast: {self.params.pfast}) (MA Slow: {self.params.pslow}) Ending Value: {round(self.broker.getvalue(), 1)}"
+        msg = f"(EMA Fast: {self.params.pfast}) (EMA Slow: {self.params.pslow}) Ending Value: {round(self.broker.getvalue(), 1)}"
         self.log(msg, doprint=True)
-        with open(f'.\\SMA\\results\\result-{self.src}.txt', 'a') as f:
+        with open(f'.\\Double_EMA\\results\\result-{self.src}.txt', 'a') as f:
             f.write(msg+'\n')
 
 
@@ -67,9 +68,12 @@ if __name__ == '__main__':
     src_list = os.listdir('.\data')
 
     for src in src_list:
+        start = time.time()
+        print(f'{src[:-4]} is pending.')
+
         cerebro = bt.Cerebro()
 
-        f = open(f'.\\SMA\\results\\result-{src[:-4]}.txt', 'w')
+        f = open(f'.\\Double_EMA\\results\\result-{src[:-4]}.txt', 'w')
         f.truncate()
         f.close()
 
@@ -91,20 +95,16 @@ if __name__ == '__main__':
 
         strats = cerebro.optstrategy(
             TestStrategy,
-            pfast=range(2, 30),
-            pslow=range(5, 120),
+            pfast=range(3, 25),
+            pslow=range(10, 60),
             src=src
         )
 
-        cerebro.addsizer(bt.sizers.AllInSizerInt)
+        cerebro.addsizer(bt.sizers.AllInSizer)
 
         cerebro.adddata(data)
-        # print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+
         cerebro.run()
 
-        # cerebro.addstrategy(TestStrategy)
-
-    # cerebro.adddata(data)
-    # # print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
-    # cerebro.run(maxcpus=1)
-    # print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+        print(f"Time spent is {round(time.time() - start, 1)} s")
+        print("----------------------------------------------")
