@@ -42,4 +42,4 @@ for result in result_list:
         by='end_value', ascending=False).reset_index()
     result_df = result_df.drop(columns='index')
     result_df.head(10).to_csv(
-        f".\\Double_EMA\\best_double_ema\\{result[:-4]}.csv")
+        f".\\Double_EMA\\best_double_ema\\best-{result[7:-4]}.csv")

@@ -41,4 +41,4 @@ for result in result_list:
     result_df = result_df.sort_values(
         by='end_value', ascending=False).reset_index()
     result_df = result_df.drop(columns='index')
-    result_df.head(10).to_csv(f".\\SMA\\best_ma\\{result[:-4]}.csv")
+    result_df.head(10).to_csv(f".\\SMA\\best_ma\\best-{result[7:-4]}.csv")
