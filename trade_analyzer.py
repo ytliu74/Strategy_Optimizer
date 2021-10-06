@@ -1,50 +1,50 @@
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
-
 import datetime
 import json
+import os
+import sys
 
 import backtrader as bt
 import backtrader.analyzers as btanalyzers
 import backtrader.feeds as btfeeds
-import backtrader.strategies as btstrats
 
-from pprint import pprint
+path = os.path.abspath('.')
+sys.path.append(path)
 
-cerebro = bt.Cerebro()
+from Strategies.double_EMA import double_EMA
+from Strategies.double_SMA import double_SMA
 
-# data
-data = btfeeds.GenericCSVData(
-    dataname=f'.\data\sh.600000.csv',
-    fromdate=datetime.datetime(2015, 1, 1),
-    todate=datetime.datetime(2021, 9, 1),
-    nullvalue=0.0,
-    dtformat=('%Y-%m-%d'),
 
-    datetime=0,
-    high=1,
-    low=2,
-    open=3,
-    close=4,
-    volume=5,
-    openinterest=-1
-)
+def my_trade_analyzer(src, strategy):
+    data = btfeeds.GenericCSVData(
+        dataname=f'.\data\{src}.csv',
+        fromdate=datetime.datetime(2014, 1, 1),
+        todate=datetime.datetime(2021, 9, 1),
+        nullvalue=0.0,
+        dtformat=('%Y-%m-%d'),
 
-cerebro.adddata(data)
+        datetime=0,
+        high=1,
+        low=2,
+        open=3,
+        close=4,
+        volume=5,
+        openinterest=-1
+    )
 
-# strategy
-cerebro.addstrategy(btstrats.SMA_CrossOver)
+    cerebro = bt.Cerebro()
 
-# Analyzer
-# cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
-cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade')
+    cerebro.adddata(data)
+    cerebro.addstrategy(strategy, src=src)
+    cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
 
-thestrats = cerebro.run()
-thestrat = thestrats[0]
+    thestrats = cerebro.run()
+    thestrat = thestrats[0]
 
-result_dict = thestrat.analyzers.trade.get_analysis()
-pprint(result_dict)
+    result_dict = thestrat.analyzers.trade_analyzer.get_analysis()
 
-with open('x.json', 'w') as f:
-    f.write(json.dumps(result_dict, ensure_ascii=False,
-            indent=4, separators=(',', ':')))
+    with open(f'.\\Analyze\\analyze-{src}.json', 'w') as f:
+        f.write(json.dumps(result_dict, ensure_ascii=False,
+                indent=4, separators=(',', ': ')))
+
+if __name__ == '__main__':
+    my_trade_analyzer('sh.600000', double_SMA)
