@@ -5,15 +5,14 @@ import time
 import backtrader as bt
 import backtrader.feeds as btfeeds
 
-path = os.path.abspath('.')
-sys.path.append(path)
-from Strategies.double_EMA import double_EMA
+sys.path.append('.')
+from MyStrategies import *
 
 
 if __name__ == '__main__':
     src_list = os.listdir('.\data')
 
-    for src in src_list[163:]:
+    for src in src_list:
         start = time.time()
         print(f'{src[:-4]} is pending.')
 
@@ -40,7 +39,7 @@ if __name__ == '__main__':
         )
 
         strats = cerebro.optstrategy(
-            double_EMA,
+            DoubleEMA,
             pfast=range(2, 25),
             pslow=range(10, 80),
             src=src

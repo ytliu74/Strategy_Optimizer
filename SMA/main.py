@@ -5,10 +5,8 @@ import time
 import backtrader as bt
 import backtrader.feeds as btfeeds
 
-path = os.path.abspath('.')
-sys.path.append(path)
-from Strategies.double_SMA import double_SMA
-
+sys.path.append('.')
+from MyStrategies import *
 
 if __name__ == '__main__':
     src_list = os.listdir('.\data')
@@ -40,7 +38,7 @@ if __name__ == '__main__':
         )
 
         strats = cerebro.optstrategy(
-            double_SMA,
+            DoubleSMA,
             pfast=range(2, 30),
             pslow=range(5, 120),
             src=src

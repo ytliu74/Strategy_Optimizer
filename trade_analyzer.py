@@ -10,8 +10,7 @@ import backtrader.feeds as btfeeds
 path = os.path.abspath('.')
 sys.path.append(path)
 
-from Strategies.double_EMA import double_EMA
-from Strategies.double_SMA import double_SMA
+from MyStrategies import *
 
 
 def my_trade_analyzer(src, strategy):
@@ -47,4 +46,4 @@ def my_trade_analyzer(src, strategy):
                 indent=4, separators=(',', ': ')))
 
 if __name__ == '__main__':
-    my_trade_analyzer('sh.600000', double_SMA)
+    my_trade_analyzer('sh.600000', DoubleSMA)

@@ -1,3 +1,4 @@
 (MA Fast: 10) (MA Slow: 30) Ending Value: 10001.7
 (MA Fast: 10) (MA Slow: 30) Ending Value: 10001.7
 (MA Fast: 10) (MA Slow: 30) Ending Value: 10001.7
+(MA Fast: 10) (MA Slow: 30) Ending Value: 10001.7
