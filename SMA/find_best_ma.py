@@ -20,9 +20,12 @@ for result in result_list:
         if not nums:
             continue
         else:
-            fast = int(nums[0])
-            slow = int(nums[1])
-            end = float(nums[2])
+            try:
+                fast = int(nums[0])
+                slow = int(nums[1])
+                end = float(nums[2])
+            except:
+                pass
 
             if fast >= slow:    # remove statistics with fast larger then slow
                 continue

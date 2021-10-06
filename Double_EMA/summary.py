@@ -23,7 +23,7 @@ for best_ma in best_list:
         fast_emas.append(f)
 
 plt.scatter(slow_emas, fast_emas, s=10, marker='o')
-plt.xlabel('ma_slow')
-plt.ylabel('ma_fast')
+plt.xlabel('sma_slow')
+plt.ylabel('sma_fast')
 plt.savefig('.\\Double_EMA\\summary.png', format='png')
 plt.show()
