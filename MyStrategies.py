@@ -3,6 +3,8 @@ import backtrader as bt
 class DoubleEMA(bt.Strategy):
     '''
     Simplest double EMA crossover strategy.
+    
+    Default params are 10 & 30
     '''
     params = {
         'pfast': 10,
@@ -58,14 +60,14 @@ class DoubleEMA(bt.Strategy):
     def stop(self):
         msg = f"(EMA Fast: {self.params.pfast}) (EMA Slow: {self.params.pslow}) Ending Value: {round(self.broker.getvalue(), 1)}"
         self.log(msg, doprint=True)
-        with open(f'.\\Double_EMA\\results\\result-{self.src}.txt', 'a') as f:
-            f.write(msg+'\n')
 
 
 
 class DoubleSMA(bt.Strategy):
     '''
     Simplest double SMA crossover strategy.
+    
+    Default params are 10 & 30
     '''
     params = {
         'pfast': 10,
@@ -121,5 +123,3 @@ class DoubleSMA(bt.Strategy):
     def stop(self):
         msg = f"(MA Fast: {self.params.pfast}) (MA Slow: {self.params.pslow}) Ending Value: {round(self.broker.getvalue(), 1)}"
         self.log(msg, doprint=True)
-        with open(f'.\\SMA\\results\\result-{self.src}.txt', 'a') as f:
-            f.write(msg+'\n')

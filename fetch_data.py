@@ -10,7 +10,7 @@ lg = bs.login()
 
 fields = "date, high, low, open, close, volume"
 start_date = '2005-01-01'
-end_date = '2021-09-01'
+end_date = '2021-10-01'
 
 
 code = pd.read_csv("stocks.csv")
