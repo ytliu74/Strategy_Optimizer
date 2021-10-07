@@ -12,15 +12,11 @@ from MyStrategies import *
 if __name__ == '__main__':
     src_list = os.listdir('.\data')
 
-    for src in src_list[:2]:
+    for src in src_list[35:]:
         start = time.time()
         print(f'{src[:-4]} is pending.')
 
         cerebro = bt.Cerebro()
-
-        f = open(f'.\\SMA\\results\\result-{src[:-4]}.csv', 'w')
-        f.truncate()
-        f.close()
 
         data = btfeeds.GenericCSVData(
             dataname=f'.\data\{src}',
@@ -57,11 +53,9 @@ if __name__ == '__main__':
         par_list = [[x[0].params.pfast,
                      x[0].params.pslow,
                      x[0].analyzers.returns.get_analysis()['rnorm100'],
-                     x[0].analyzers.sqn.get_analysis()['sqn'],
-                     x[0].analyzers.sqn.get_analysis()['trades']]
-                    for x in back]
+                     ]for x in back]
         
-        col = ['sma_fast', 'sma_slow', 'annual_return', 'sqn', 'trades']
+        col = ['sma_fast', 'sma_slow', 'annual_return']
         par_df = pd.DataFrame(par_list, columns=col)
         
         par_df.to_csv(f".\\SMA\\results\\result-{src[:-4]}.csv")

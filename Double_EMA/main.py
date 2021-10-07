@@ -14,15 +14,11 @@ from MyStrategies import *
 if __name__ == '__main__':
     src_list = os.listdir('.\data')
 
-    for src in src_list[:2]:
+    for src in src_list:
         start = time.time()
         print(f'{src[:-4]} is pending.')
 
         cerebro = bt.Cerebro()
-
-        f = open(f'.\\Double_EMA\\results\\result-{src[:-4]}.txt', 'w')
-        f.truncate()
-        f.close()
 
         data = btfeeds.GenericCSVData(
             dataname=f'.\data\{src}',
@@ -42,7 +38,7 @@ if __name__ == '__main__':
 
         strats = cerebro.optstrategy(
             DoubleEMA,
-            pfast=range(2, 25),
+            pfast=range(1, 25),
             pslow=range(10, 80),
             src=src
         )

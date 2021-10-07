@@ -19,6 +19,6 @@ for src in src_list[:]:
         tmp_df = tmp_df.drop(columns='Unnamed: 0')  # remove original index
         result_df = result_df.append(tmp_df)
 
-    result_df = result_df.sort_values(by='end_value', ascending=False)
+    result_df = result_df.sort_values(by='annual_return', ascending=False)
 
     result_df.to_csv(f'.\\Best_strategy\\{src[5:]}', index=False)
