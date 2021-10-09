@@ -173,23 +173,56 @@ class DoubleKAMA(bt.Strategy):  # TODO: Complete this strategy
         self.crossover = bt.ind.CrossOver
 
 
-class ImprovedMACD(bt.Strategy):
+class SculpingMACD(bt.Strategy):
     '''
     Extract from my TradingView strategy: Sculping MACD
 
-    params:{pfast, pslow, psignal, ma_type}
+    Using EMA.
+
+    params:[pfast:13, pslow=26, psignal=9, long_above_zero, long_below_zero]
     '''
     params = {
         'pfast': 13,
         'pslow': 26,
         'psignal': 9,
-        'ma_type': 'sma'
+        'long_above_zero': True,
+        'long_below_zero': True
     }
 
+    is_long_above = False
+    is_long_below = False
+    
     def __init__(self):
         MACD = bt.ind.MACDHisto(
-            period_me1=self.params.pfast)
+            period_me1=self.params.pfast, period_me2=self.params.pslow, period_signal=self.params.psignal)
 
         self.macd = MACD.macd
         self.signal = MACD.signal
         self.hist = MACD.histo
+        
+        self.crossover = bt.ind.CrossOver(self.macd, self.signal)
+
+    def next(self):
+        if not self.position:  # Not in position, seek to buy.
+            if self.params.long_above_zero:
+                # macd cross up signal when macd is above 0.
+                if self.crossover > 0 and self.macd >= 0:
+                    self.buy()
+                    self.is_long_above = True
+
+            if self.params.long_below_zero:
+                # macd cross up signal when macd is below 0.
+                if self.crossover > 0 and self.macd < 0:
+                    self.buy()
+                    self.is_long_below = True
+
+        else:  # Already in position.
+            if self.is_long_above:
+                if self.crossover < 0 and self.is_long_above:
+                    self.close()
+                    self.is_long_above = False
+
+            if self.is_long_below:
+                if self.macd < 0 and self.hist[-1] > self.hist or self.macd >= 0 and self.crossover < 0:
+                    self.close()
+                    self.is_long_below = False
