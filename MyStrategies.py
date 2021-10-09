@@ -1,9 +1,10 @@
 import backtrader as bt
 
+
 class DoubleEMA(bt.Strategy):
     '''
     Simplest double EMA crossover strategy.
-    
+
     Default params are 10 & 30
     '''
     params = {
@@ -17,7 +18,7 @@ class DoubleEMA(bt.Strategy):
             dt = dt or self.datas[0].datetime.date(0)
             print(f"{dt.isoformat()} {txt}")
 
-    def __init__(self, src):
+    def __init__(self, src='sh.000000,csv'):
         self.dataclose = self.datas[0].close
         self.dataopen = self.datas[0].open
         self.src = src[:-4]
@@ -62,11 +63,10 @@ class DoubleEMA(bt.Strategy):
         self.log(msg, doprint=True)
 
 
-
 class DoubleSMA(bt.Strategy):
     '''
     Simplest double SMA crossover strategy.
-    
+
     Default params are 10 & 30
     '''
     params = {
@@ -80,7 +80,7 @@ class DoubleSMA(bt.Strategy):
             dt = dt or self.datas[0].datetime.date(0)
             print(f"{dt.isoformat()} {txt}")
 
-    def __init__(self, src):
+    def __init__(self, src='sh.000000,csv'):
         self.dataclose = self.datas[0].close
         self.dataopen = self.datas[0].open
         self.src = src[:-4]
@@ -123,3 +123,52 @@ class DoubleSMA(bt.Strategy):
     def stop(self):
         msg = f"(MA Fast: {self.params.pfast}) (MA Slow: {self.params.pslow}) Ending Value: {round(self.broker.getvalue(), 1)}"
         self.log(msg, doprint=True)
+
+
+class SingleKAMA(bt.Strategy):
+    '''
+    Simple single KAMA cross strategy
+    '''
+    params = {
+        'period': 30,
+        'fast': 2,
+        'slow': 30
+    }
+
+    def __init__(self):
+        self.dataclose = self.datas[0].close
+
+        self.kama = bt.ind.AdaptiveMovingAverage(
+            self.dataclose, period=self.params.period, fast=self.params.fast, slow=self.params.slow)
+
+    def next(self):
+        if not self.position:
+            if self.dataclose[0] > self.kama[0]:  # cross up
+                self.order = self.buy()
+        else:
+            if self.dataclose[0] < self.kama[0]:  # cross down
+                self.order = self.close()
+
+
+class DoubleKAMA(bt.Strategy):  # TODO: Complete this strategy
+    '''
+    Simple double KAMA (AdaptiveMovingAverage) cross strategy.
+    '''
+    params = {
+        'period_1': 30,
+        'fast_1': 2,
+        'slow_1': 30,
+        'period_2': 10,
+        'fast_2': 2,
+        'slow_2': 15
+    }
+
+    def __init__(self):
+        kama_1 = bt.ind.AdaptiveMovingAverage(
+            period=self.params.period_1, fast=self.params.fast_1, slow=self.params.slow_1)
+        kama_2 = bt.ind.AdaptiveMovingAverage(
+            period=self.params.period_2, fast=self.params.fast_2, slow=self.params.slow_2)
+
+        self.crossover = bt.ind.CrossOver
+
+

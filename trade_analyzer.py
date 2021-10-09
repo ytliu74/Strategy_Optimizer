@@ -1,3 +1,4 @@
+from MyStrategies import *
 import datetime
 import json
 import os
@@ -10,10 +11,8 @@ import backtrader.feeds as btfeeds
 path = os.path.abspath('.')
 sys.path.append(path)
 
-from MyStrategies import *
 
-
-def my_trade_analyzer(src, strategy):
+def my_trade_analyzer(src, strategy, params):
     data = btfeeds.GenericCSVData(
         dataname=f'.\data\{src}',
         fromdate=datetime.datetime(2014, 1, 1),
@@ -33,7 +32,8 @@ def my_trade_analyzer(src, strategy):
     cerebro = bt.Cerebro()
     cerebro.broker.setcash(100_0000)
     cerebro.adddata(data)
-    cerebro.addstrategy(strategy, pfast=17, pslow=40, src=src)
+    cerebro.addstrategy(
+        strategy, slow=params['slow'], fast=params['fast'], period=params['period'])
     cerebro.addsizer(bt.sizers.AllInSizerInt)
     cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
     cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
@@ -42,16 +42,22 @@ def my_trade_analyzer(src, strategy):
     cerebro.addanalyzer(btanalyzers.PyFolio, _name='pyfolio')
     cerebro.addanalyzer(btanalyzers.SQN, _name='sqn')
     cerebro.addanalyzer(btanalyzers.Returns, _name='returns')
-    
+
     thestrats = cerebro.run()
     thestrat = thestrats[0]
 
-    result_dict = thestrat.analyzers.sqn.get_analysis()
-    # print(result_dict['rnorm100'])
+    result_dict = thestrat.analyzers.returns.get_analysis()
+    print(result_dict['rnorm100'])
 
     with open(f'.\\Analyze\\analyze-{src[:-4]}.json', 'w') as f:
         f.write(json.dumps(result_dict, ensure_ascii=False,
                 indent=4, separators=(',', ': ')))
 
+
 if __name__ == '__main__':
-    my_trade_analyzer('sh.000001.csv', DoubleSMA)
+    params = dict(
+        period=89,
+        slow=69,
+        fast=1
+    )
+    my_trade_analyzer('sh.000300.csv', SingleKAMA, params)

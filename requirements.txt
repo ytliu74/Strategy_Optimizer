@@ -4,3 +4,4 @@ baostock
 matplotlib
 yfinance
 trendln
+optunity
