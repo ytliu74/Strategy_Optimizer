@@ -1,4 +1,5 @@
 import backtrader as bt
+from backtrader.indicators.macd import MACDHisto
 
 
 class DoubleEMA(bt.Strategy):
@@ -172,3 +173,23 @@ class DoubleKAMA(bt.Strategy):  # TODO: Complete this strategy
         self.crossover = bt.ind.CrossOver
 
 
+class ImprovedMACD(bt.Strategy):
+    '''
+    Extract from my TradingView strategy: Sculping MACD
+
+    params:{pfast, pslow, psignal, ma_type}
+    '''
+    params = {
+        'pfast': 13,
+        'pslow': 26,
+        'psignal': 9,
+        'ma_type': 'sma'
+    }
+
+    def __init__(self):
+        MACD = bt.ind.MACDHisto(
+            period_me1=self.params.pfast)
+
+        self.macd = MACD.macd
+        self.signal = MACD.signal
+        self.hist = MACD.histo
