@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
         data = btfeeds.GenericCSVData(
             dataname=f'.\data\{src}',
-            fromdate=datetime.datetime(2020, 1, 1),
+            fromdate=datetime.datetime(2014, 1, 1),
             todate=datetime.datetime(2021, 10, 1),
             nullvalue=0.0,
             dtformat=('%Y-%m-%d'),
@@ -38,7 +38,7 @@ if __name__ == '__main__':
         strats = cerebro.optstrategy(
             SculpingMACD,
             pfast=range(1, 20),
-            pslow=range(10, 70),
+            pslow=range(10, 60),
             psignal=range(3, 40)
         )
 
@@ -56,12 +56,13 @@ if __name__ == '__main__':
 
         par_list = [[x[0].params.pfast, 
                      x[0].params.pslow,
+                     x[0].params.psignal,
                      x[0].analyzers.returns.get_analysis()['rnorm100'],
                      x[0].analyzers.sqn.get_analysis()['sqn'],
                      x[0].analyzers.sqn.get_analysis()['trades']]
                     for x in back]
 
-        col = ['ema_fast', 'ema_slow', 'annual_return', 'sqn',  'trades']
+        col = ['macd_fast', 'macd_slow', 'macd_signal','annual_return', 'sqn',  'trades']
         par_df = pd.DataFrame(par_list, columns=col)
 
         par_df.to_csv(f".\\Sculping_MACD\\results\\result-{src[:-4]}.csv")

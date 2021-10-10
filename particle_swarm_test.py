@@ -40,8 +40,8 @@ def runstrat(slow, fast, period):
 
 solvers = ['grid search', 'random search', 'particle swarm']
 
-opt = optunity.maximize(runstrat, num_evals=300, solver_name=solvers[2],
-                        fast=[2, 30], slow=[10, 80], period=[5, 40])
+opt = optunity.maximize(runstrat, num_evals=3000, solver_name=solvers[2],
+                        fast=[1, 20], slow=[10, 70], period=[3, 40])
 
 optimal_pars, details, _ = opt
 print('Optimal params:')
@@ -52,4 +52,4 @@ print(f"period = {optimal_pars['period']}")
 params = dict(
     pslow=round(optimal_pars['slow']), pfast=round(optimal_pars['fast']), psignal=round(optimal_pars['period'])
 )
-my_trade_analyzer('sh.000300.csv', SculpingMACD, params)
+my_trade_analyzer('sh.000001.csv', SculpingMACD, params)

@@ -62,8 +62,8 @@ if __name__ == '__main__':
     # my_trade_analyzer('sh.000300.csv', SingleKAMA, params)
 
     params = dict(
-        pfast=1,
-        pslow=72,
-        psignal=7
+        pfast=7,
+        pslow=17,
+        psignal=11
     )
-    my_trade_analyzer('sh.000300.csv', SculpingMACD, params)
+    my_trade_analyzer('sh.000001.csv', SculpingMACD, params)
