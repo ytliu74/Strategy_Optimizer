@@ -6,7 +6,7 @@ class DoubleEMA(bt.Strategy):
     '''
     Simplest double EMA crossover strategy.
 
-    Default params are 10 & 30
+    Default params are ``pfast``:10, ``pslow``:30, ``printlog``:False
     '''
     params = {
         'pfast': 10,
@@ -68,7 +68,7 @@ class DoubleSMA(bt.Strategy):
     '''
     Simplest double SMA crossover strategy.
 
-    Default params are 10 & 30
+    Default params are ``pfast``: 10,  ``pslow``: 30, ``printlog``
     '''
     params = {
         'pfast': 10,
@@ -179,14 +179,15 @@ class SculpingMACD(bt.Strategy):
 
     Using EMA.
 
-    params:[pfast:13, pslow=26, psignal=9, long_above_zero, long_below_zero]
+    params:[``pfast``:13, ``pslow``:26, ``psignal``:9, ``long_above_zero``, ``long_below_zero``, ``movav``]
     '''
     params = {
         'pfast': 13,
         'pslow': 26,
         'psignal': 9,
         'long_above_zero': True,
-        'long_below_zero': True
+        'long_below_zero': True,
+        'movav': bt.ind.EMA
     }
 
     is_long_above = False
@@ -194,7 +195,8 @@ class SculpingMACD(bt.Strategy):
     
     def __init__(self):
         MACD = bt.ind.MACDHisto(
-            period_me1=self.params.pfast, period_me2=self.params.pslow, period_signal=self.params.psignal)
+            period_me1=self.params.pfast, period_me2=self.params.pslow, 
+            period_signal=self.params.psignal, movav=self.params.movav)
 
         self.macd = MACD.macd
         self.signal = MACD.signal

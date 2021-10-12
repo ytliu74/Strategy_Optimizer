@@ -13,7 +13,12 @@ from MyStrategies import *
 if __name__ == '__main__':
     src_list = os.listdir('.\data')
 
-    for src in src_list[:2]:
+    for src in src_list:
+        
+        result_path = f".\\Sculping_MACD\\results\\result-{src[:-4]}.csv"
+        if os.path.exists(result_path):
+            continue
+        
         start = time.time()
         print(f'{src[:-4]} is pending.')
 
@@ -65,7 +70,7 @@ if __name__ == '__main__':
         col = ['macd_fast', 'macd_slow', 'macd_signal','annual_return', 'sqn',  'trades']
         par_df = pd.DataFrame(par_list, columns=col)
 
-        par_df.to_csv(f".\\Sculping_MACD\\results\\result-{src[:-4]}.csv")
+        par_df.to_csv(result_path)
 
         print(f"Time spent is {round(time.time() - start, 1)} s")
         print("--------------------------------------")

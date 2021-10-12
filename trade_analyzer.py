@@ -7,6 +7,7 @@ import sys
 import backtrader as bt
 import backtrader.analyzers as btanalyzers
 import backtrader.feeds as btfeeds
+import pandas as pd
 
 from MyStrategies import *
 
@@ -31,10 +32,20 @@ def my_trade_analyzer(src, strategy, params=None):
     cerebro = bt.Cerebro()
     cerebro.broker.setcash(100_0000)
     cerebro.adddata(data)
-    cerebro.addstrategy(strategy, pslow=params['pslow'], pfast=params['pfast'], psignal=params['psignal'])
+
+    if strategy == DoubleSMA:
+        cerebro.addstrategy(
+            strategy, pslow=params['pslow'], pfast=params['pfast'])
+    if strategy == DoubleEMA:
+        cerebro.addstrategy(
+            strategy, pslow=params['pslow'], pfast=params['pfast'])
+    if strategy == SculpingMACD:
+        cerebro.addstrategy(
+            strategy, pslow=params['pslow'], pfast=params['pfast'], psignal=params['psignal'], movav=params['movav'])
+        
     cerebro.addsizer(bt.sizers.PercentSizerInt, percents=90)
     cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
-    cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='mysharpe')
+    cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='sharpe_ratio')
     cerebro.addanalyzer(btanalyzers.AnnualReturn, _name='annual_return')
     cerebro.addanalyzer(btanalyzers.DrawDown, _name='draw_down')
     cerebro.addanalyzer(btanalyzers.PyFolio, _name='pyfolio')
@@ -44,12 +55,23 @@ def my_trade_analyzer(src, strategy, params=None):
     thestrats = cerebro.run()
     thestrat = thestrats[0]
 
-    result_dict = thestrat.analyzers.returns.get_analysis()
-    print('AnnualReturn is:')
-    print(result_dict['rnorm100'])
+    par_list = [thestrat.analyzers.trade_analyzer.get_analysis()['long']['total'],
+                thestrat.analyzers.trade_analyzer.get_analysis()['long']['won'], 
+                thestrat.analyzers.trade_analyzer.get_analysis()['long']['lost'],
+                thestrat.analyzers.sharpe_ratio.get_analysis()['sharperatio'],
+                thestrat.analyzers.returns.get_analysis()['ravg'],
+                thestrat.analyzers.returns.get_analysis()['rnorm'],
+                thestrat.analyzers.sqn.get_analysis()['sqn']]
 
+    col = ['total_trades', 'won', 'lost', 'sharpe_ratio', 'avg_return', 'annual_return', 'sqn']
+    
+    par_dict = dict(zip(col, par_list))
+    
+    par_dict['win_rate'] = par_dict['won'] / par_dict['total_trades']
+    
+    
     with open(f'.\\Analyze\\analyze-{src[:-4]}.json', 'w') as f:
-        f.write(json.dumps(result_dict, ensure_ascii=False,
+        f.write(json.dumps(par_dict, ensure_ascii=False,
                 indent=4, separators=(',', ': ')))
 
 
@@ -64,6 +86,7 @@ if __name__ == '__main__':
     params = dict(
         pfast=7,
         pslow=17,
-        psignal=11
+        psignal=11,
+        movav=bt.ind.EMA
     )
     my_trade_analyzer('sh.000001.csv', SculpingMACD, params)

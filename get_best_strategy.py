@@ -3,7 +3,8 @@ import pandas as pd
 
 source_folders = {
     'SMA': 'best_ma',
-    'Double_EMA': 'best_double_ema'
+    'Double_EMA': 'best_double_ema',
+    'Sculping_MACD': 'best_combination'
 }
 
 src_list = os.listdir('.\\data')
