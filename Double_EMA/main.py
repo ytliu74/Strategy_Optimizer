@@ -15,6 +15,10 @@ if __name__ == '__main__':
     src_list = os.listdir('.\data')
 
     for src in src_list:
+        result_path = f".\\Double_EMA\\results\\result-{src[:-4]}.csv"
+        if os.path.exists(result_path):
+            continue
+        
         start = time.time()
         print(f'{src[:-4]} is pending.')
 
@@ -48,21 +52,18 @@ if __name__ == '__main__':
         cerebro.adddata(data)
         
         cerebro.addanalyzer(btanalyzers.Returns, _name='returns')
-        cerebro.addanalyzer(btanalyzers.SQN, _name='sqn')
         
         back = cerebro.run()
         
         par_list = [[x[0].params.pfast,
                      x[0].params.pslow,
-                     x[0].analyzers.returns.get_analysis()['rnorm100'],
-                     x[0].analyzers.sqn.get_analysis()['sqn'],
-                     x[0].analyzers.sqn.get_analysis()['trades']]
+                     x[0].analyzers.returns.get_analysis()['rnorm100']]
                     for x in back]
         
-        col = ['ema_fast', 'ema_slow', 'annual_return', 'sqn', 'trades']
+        col = ['ema_fast', 'ema_slow', 'annual_return']
         par_df = pd.DataFrame(par_list, columns=col)
         
-        par_df.to_csv(f".\\Double_EMA\\results\\result-{src[:-4]}.csv")
+        par_df.to_csv(result_path)
 
         print(f"Time spent is {round(time.time() - start, 1)} s")
         print("--------------------------------------")

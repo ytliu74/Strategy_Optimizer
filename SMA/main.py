@@ -12,7 +12,11 @@ from MyStrategies import *
 if __name__ == '__main__':
     src_list = os.listdir('.\data')
 
-    for src in src_list[35:]:
+    for src in src_list:
+        result_path = f".\\SMA\\results\\result-{src[:-4]}.csv"
+        if os.path.exists(result_path):
+            continue        
+        
         start = time.time()
         print(f'{src[:-4]} is pending.')
 
@@ -41,12 +45,11 @@ if __name__ == '__main__':
             src=src
         )
 
-        cerebro.addsizer(bt.sizers.AllInSizerInt)
+        cerebro.addsizer(bt.sizers.PercentSizerInt, percents=90)
         cerebro.broker.setcash(100_0000)
         cerebro.adddata(data)
         
         cerebro.addanalyzer(btanalyzers.Returns, _name='returns')
-        cerebro.addanalyzer(btanalyzers.SQN, _name='sqn')
         
         back = cerebro.run()
         
