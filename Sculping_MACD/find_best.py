@@ -13,6 +13,6 @@ for result in result_list:
     result_df = result_df.sort_values(
         by='annual_return', ascending=False).reset_index()
     result_df = result_df.drop(columns=['index', 'Unnamed: 0'])
-    result_df.head().to_csv(
+    result_df.head(50).to_csv(
         f".\\Sculping_MACD\\best_combination\\best-{result[7:-4]}.csv")
     

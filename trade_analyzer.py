@@ -42,7 +42,7 @@ def my_trade_analyzer(src, strategy, params=None):
     if strategy == SculpingMACD:
         cerebro.addstrategy(
             strategy, pslow=params['pslow'], pfast=params['pfast'], psignal=params['psignal'], movav=params['movav'])
-        
+
     cerebro.addsizer(bt.sizers.PercentSizerInt, percents=90)
     cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
     cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='sharpe_ratio')
@@ -56,23 +56,24 @@ def my_trade_analyzer(src, strategy, params=None):
     thestrat = thestrats[0]
 
     par_list = [thestrat.analyzers.trade_analyzer.get_analysis()['long']['total'],
-                thestrat.analyzers.trade_analyzer.get_analysis()['long']['won'], 
+                thestrat.analyzers.trade_analyzer.get_analysis()['long']['won'],
                 thestrat.analyzers.trade_analyzer.get_analysis()['long']['lost'],
                 thestrat.analyzers.sharpe_ratio.get_analysis()['sharperatio'],
                 thestrat.analyzers.returns.get_analysis()['ravg'],
                 thestrat.analyzers.returns.get_analysis()['rnorm'],
                 thestrat.analyzers.sqn.get_analysis()['sqn']]
 
-    col = ['total_trades', 'won', 'lost', 'sharpe_ratio', 'avg_return', 'annual_return', 'sqn']
-    
+    col = ['total_trades', 'won', 'lost', 'sharpe_ratio',
+           'avg_return', 'annual_return', 'sqn']
+
     par_dict = dict(zip(col, par_list))
-    
+
     par_dict['win_rate'] = par_dict['won'] / par_dict['total_trades']
-    
-    
-    with open(f'.\\Analyze\\analyze-{src[:-4]}.json', 'w') as f:
-        f.write(json.dumps(par_dict, ensure_ascii=False,
-                indent=4, separators=(',', ': ')))
+
+    return par_dict
+    # with open(f'.\\Analyze\\analyze-{src[:-4]}.json', 'w') as f:
+    #     f.write(json.dumps(par_dict, ensure_ascii=False,
+    #             indent=4, separators=(',', ': ')))
 
 
 if __name__ == '__main__':
