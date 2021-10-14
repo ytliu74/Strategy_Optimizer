@@ -1,7 +1,7 @@
 backtrader
 pandas
 baostock
-matplotlib
+matplotlib==3.2.2
 yfinance
 trendln
 optunity

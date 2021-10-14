@@ -41,7 +41,7 @@ def my_trade_analyzer(src, strategy, params=None):
             strategy, pslow=params['pslow'], pfast=params['pfast'])
     if strategy == SculpingMACD:
         cerebro.addstrategy(
-            strategy, pslow=params['pslow'], pfast=params['pfast'], psignal=params['psignal'], movav=params['movav'])
+            strategy, pslow=params['pslow'], pfast=params['pfast'], psignal=params['psignal'])
 
     cerebro.addsizer(bt.sizers.PercentSizerInt, percents=90)
     cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
