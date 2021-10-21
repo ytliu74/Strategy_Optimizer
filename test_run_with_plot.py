@@ -24,6 +24,6 @@ data = btfeeds.GenericCSVData(
 cerebro.adddata(data)  # Add the data feed
 cerebro.broker.setcash(100_0000)
 cerebro.addsizer(bt.sizers.PercentSizer, percents=90)
-cerebro.addstrategy(SculpingMACD) #  # Add the trading strategy
+cerebro.addstrategy(MAChannel) #  # Add the trading strategy
 cerebro.run()  # run it all
 cerebro.plot()  # and plot it with a single command

@@ -238,14 +238,32 @@ class MAChannel(bt.Strategy):
     '''
     
     params = {
-        'MA_period': 5,
+        'MA_period': 20,
         'ATR_period': 14,
         'up_line': 1,
         'down_line': 1
     }
     
     def __init__(self):
+        self.dataclose = self.datas[0].close
         
         self.ma = bt.ind.SMA(period=self.params.MA_period)
         self.atr = bt.ind.ATR(period=self.params.ATR_period)
         
+        self.upline = self.ma + self.params.up_line * self.atr
+        self.downline = self.ma - self.params.down_line * self.atr
+        
+        # When cross_up is True, the price close above upline.
+        self.cross_up = bt.ind.CrossOver(self.dataclose, self.upline) > 0
+        # When cross_down is True, the price close below downline.
+        self.cross_down = bt.ind.CrossOver(self.dataclose, self.downline) < 0
+    
+    def next(self):
+        self.buy_condition = not self.position and self.cross_up
+        self.sell_condition = self.position and self.cross_down
+        
+        if self.buy_condition:
+            self.buy()
+        
+        if self.sell_condition:
+            self.close()
