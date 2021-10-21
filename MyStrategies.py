@@ -228,3 +228,24 @@ class SculpingMACD(bt.Strategy):
                 if self.macd < 0 and self.hist[-1] > self.hist or self.macd >= 0 and self.crossover < 0:
                     self.close()
                     self.is_long_below = False
+                    
+
+class MAChannel(bt.Strategy):
+    '''
+    Using MA and ATR to form a channel.
+    
+    
+    '''
+    
+    params = {
+        'MA_period': 5,
+        'ATR_period': 14,
+        'up_line': 1,
+        'down_line': 1
+    }
+    
+    def __init__(self):
+        
+        self.ma = bt.ind.SMA(period=self.params.MA_period)
+        self.atr = bt.ind.ATR(period=self.params.ATR_period)
+        
