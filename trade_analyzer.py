@@ -42,6 +42,10 @@ def my_trade_analyzer(src, strategy, params=None):
     if strategy == SculpingMACD:
         cerebro.addstrategy(
             strategy, pslow=params['pslow'], pfast=params['pfast'], psignal=params['psignal'])
+    if strategy == MAChannel:
+        cerebro.addstrategy(
+            strategy, MA_period=params['MA_period'], ATR_period=params['ATR_period'],
+            up_line=params['up_line'], down_line=params['down_line'])
 
     cerebro.addsizer(bt.sizers.PercentSizerInt, percents=90)
     cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
@@ -56,12 +60,14 @@ def my_trade_analyzer(src, strategy, params=None):
     thestrat = thestrats[0]
 
     par_list = [thestrat.analyzers.trade_analyzer.get_analysis()['long']['total'],
-                thestrat.analyzers.trade_analyzer.get_analysis()['long']['won'],
-                thestrat.analyzers.trade_analyzer.get_analysis()['long']['lost'],
-                thestrat.analyzers.sharpe_ratio.get_analysis()['sharperatio'],
-                thestrat.analyzers.returns.get_analysis()['ravg'],
-                thestrat.analyzers.returns.get_analysis()['rnorm'],
-                thestrat.analyzers.sqn.get_analysis()['sqn']]
+                thestrat.analyzers.trade_analyzer.get_analysis()[
+        'long']['won'],
+        thestrat.analyzers.trade_analyzer.get_analysis()[
+        'long']['lost'],
+        thestrat.analyzers.sharpe_ratio.get_analysis()['sharperatio'],
+        thestrat.analyzers.returns.get_analysis()['ravg'],
+        thestrat.analyzers.returns.get_analysis()['rnorm'],
+        thestrat.analyzers.sqn.get_analysis()['sqn']]
 
     col = ['total_trades', 'won', 'lost', 'sharpe_ratio',
            'avg_return', 'annual_return', 'sqn']

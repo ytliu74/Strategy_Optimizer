@@ -23,17 +23,23 @@ def find_tops(folder, top):
             f".\\{folder}\\bests\\best-{result[7:-4]}.csv")
 
 
-if __name__ == '__main__':
+def get_parsers():
     parser = argparse.ArgumentParser()
     parser.add_argument('--folder', type=str,
                         help='The folder containing target strategy.')
 
     parser.add_argument('--top', type=int, default=50,
                         help='Tops of each strategy.')
-    
+
     args = parser.parse_args()
     if not args.folder:
         parser.print_help()
-        sys.exit(0)
-        
+        sys.exit()
+
+    return args
+
+
+if __name__ == '__main__':
+    args = get_parsers()
+
     find_tops(args.folder, args.top)

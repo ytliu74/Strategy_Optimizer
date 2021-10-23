@@ -4,12 +4,7 @@ from pprint import pprint
 from trade_analyzer import my_trade_analyzer
 from MyStrategies import *
 
-source_folders = {
-    'SMA': 'best_ma',
-    'Double_EMA': 'best_double_ema',
-    'Sculping_MACD': 'best_combination'
-}
-
+source_folders = ['SMA', 'Sculping_MACD', 'Double_EMA']
 
 def get_params(strategy, value):
     if strategy == DoubleSMA:
@@ -53,8 +48,9 @@ for i in range(len(src_list)):
 for src in src_list[:]:
     result_df = pd.DataFrame()
     src_code = src[5:]
-    for folder, subfolder in source_folders.items():
-
+    for folder in source_folders:
+        subfolder = 'bests'
+        
         strategy, drop_list = get_strategy(folder)
 
         path = os.path.join(folder, subfolder, src)
