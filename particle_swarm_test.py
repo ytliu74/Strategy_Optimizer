@@ -26,30 +26,31 @@ data = btfeeds.GenericCSVData(
 )
 
 
-def runstrat(slow, fast, period):
+def runstrat(mp, ap, up, down):
     cerebro = bt.Cerebro()
     cerebro.adddata(data)
-    cerebro.addstrategy(SculpingMACD, pslow=round(
-        slow), pfast=round(fast), psignal=round(period))
+    cerebro.addstrategy(MAChannel, MA_period=round(mp), ATR_period=round(ap), up_line=up, down_line=down)
     cerebro.addanalyzer(btanalyzers.Returns, _name='returns')
+    cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='sharpe_ratio')
     thestrats = cerebro.run()
     thestrat = thestrats[0]
-    result_dict = thestrat.analyzers.returns.get_analysis()
+    result_dict = thestrat.analyzers.sharpe_ratio.get_analysis()
 
-    return result_dict['rnorm100']
+    return result_dict['sharperatio']
 
 solvers = ['grid search', 'random search', 'particle swarm']
 
-opt = optunity.maximize(runstrat, num_evals=3000, solver_name=solvers[2],
-                        fast=[1, 20], slow=[10, 70], period=[3, 40])
+opt = optunity.maximize(runstrat, num_evals=300, solver_name=solvers[2],
+                        mp=[1, 25], ap=[5, 20], up=[0.5, 5], down=[0.5, 2])
 
 optimal_pars, details, _ = opt
 print('Optimal params:')
-print(f"slow = {optimal_pars['slow']}")
-print(f"fast = {optimal_pars['fast']}")
-print(f"period = {optimal_pars['period']}")
+print(f"MA = {optimal_pars['mp']}")
+print(f"atr = {optimal_pars['ap']}")
+print(f"up = {optimal_pars['up']}")
+print(f"down = {optimal_pars['down']}")
 
-params = dict(
-    pslow=round(optimal_pars['slow']), pfast=round(optimal_pars['fast']), psignal=round(optimal_pars['period'])
-)
-my_trade_analyzer('sh.000001.csv', SculpingMACD, params)
+# params = dict(
+#     pslow=round(optimal_pars['slow']), pfast=round(optimal_pars['fast']), psignal=round(optimal_pars['period'])
+# )
+# my_trade_analyzer('sh.000001.csv', MAChannel, params)

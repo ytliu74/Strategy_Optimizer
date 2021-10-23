@@ -234,6 +234,7 @@ class MAChannel(bt.Strategy):
     '''
     Using MA and ATR to form a channel.
     
+    params: ``MA_period``=20, ``ATR_period``=14, ``up_line``=1, ``down_line``=1
     
     '''
     
